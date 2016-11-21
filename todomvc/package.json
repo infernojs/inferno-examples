@@ -1,0 +1,13 @@
+{
+  "private": true,
+  "scripts": {
+    "build": "webpack -p"
+  },
+  "dependencies": {
+    "inferno": "beta15",
+    "inferno-component": "beta15",
+    "todomvc-app-css": "^2.0.0",
+    "todomvc-common": "^1.0.0"
+  },
+  "devDependencies": {}
+}
