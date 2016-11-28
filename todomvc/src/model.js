@@ -9,4 +9,8 @@ export default class Model {
 		STOR.setItem(STOR_ID, JSON.stringify(this.data));
 		return this.data;
 	}
+
+	add = str => this.set(
+		this.data.concat({title: str, completed: false})
+	)
 }

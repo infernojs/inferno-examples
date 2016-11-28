@@ -17,7 +17,7 @@ class App extends Component {
 
 		e.target.value = '';
 		this.setState({
-			todos: this.state.todos.concat({title: val, completed: false})
+			todos: model.add(val)
 		});
 	};
 
