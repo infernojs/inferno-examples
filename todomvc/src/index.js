@@ -9,6 +9,8 @@ class App extends Component {
 		todos: model.get()
 	};
 
+	update = arr => this.setState({todos: arr});
+
 	add = e => {
 		if (e.which !== ENTER) return;
 
@@ -16,18 +18,18 @@ class App extends Component {
 		if (!val) return;
 
 		e.target.value = '';
-		this.setState({
-			todos: model.add(val)
-		});
+		this.update(
+			model.add(val)
+		);
 	};
 
-	focus = todo => this.setState({
-		todos: model.put(todo, {editing: 1})
-	});
+	focus = todo => this.update(
+		model.put(todo, {editing: 1})
+	);
 
-	toggleOne = todo => this.setState({
-		todos: model.toggle(todo)
-	});
+	toggleOne = todo => this.update(
+		model.toggle(todo)
+	);
 
 	render(_, {todos}) {
 		return (
