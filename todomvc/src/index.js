@@ -21,6 +21,10 @@ class App extends Component {
 		});
 	};
 
+	focus = todo => this.setState({
+		todos: model.put(todo, {editing: 1})
+	});
+
 	render(_, {todos}) {
 		return (
 			<div>
@@ -35,7 +39,17 @@ class App extends Component {
 					<input className="toggle-all" type="checkbox" />
 
 						<ul className="todo-list">
-							{ todos.map(t =>  <li>{ t.title }</li>) }
+							{
+								todos.map(t =>
+									<li>
+										<div className="view">
+											<input className="toggle" type="checkbox" checked={ t.completed } />
+											<label ondblclick={ this.focus }>{ t.title }</label>
+											<button className="destroy"></button>
+										</div>
+									</li>
+								)
+							}
 						</ul>
 					</section>
 			</div>
