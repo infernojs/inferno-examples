@@ -27,6 +27,10 @@ class App extends Component {
 		model.put(todo, {editing: 1})
 	);
 
+	remove = todo => this.update(
+		model.del(todo)
+	);
+
 	toggleOne = todo => this.update(
 		model.toggle(todo)
 	);
@@ -55,7 +59,7 @@ class App extends Component {
 
 											<label ondblclick={ this.focus }>{ t.title }</label>
 
-											<button className="destroy"></button>
+											<button className="destroy" onclick={ this.remove }></button>
 										</div>
 									</li>
 								)
