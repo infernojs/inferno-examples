@@ -1,5 +1,5 @@
 import Component from 'inferno-component';
-import { ESCAPE, ENTER, isEqual } from './util';
+import { ESCAPE, ENTER, isEqual } from './share';
 
 export default class Item extends Component {
 	constructor({data, ...props}) {
@@ -8,6 +8,8 @@ export default class Item extends Component {
 		this.state = {text: data.title};
 	}
 
+	componentWillReceiveProps = ({data}) => this.setText(data.title);
+	shouldComponentUpdate = ({data}, {text}) => !(isEqual(data, this.todo) && text === this.state.text);
 	componentWillUpdate = ({data}) => (this.todo = data);
 	componentDidUpdate = () => this.editor.focus();
 
