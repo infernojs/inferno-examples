@@ -25,4 +25,8 @@ export default class Model {
 	)
 
 	toggle = todo => this.put(todo, {completed: !todo.completed})
+
+	toggleAll = completed => this.set(
+		this.data.map(t => ({...t, completed}))
+	)
 }
