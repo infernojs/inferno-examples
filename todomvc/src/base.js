@@ -11,3 +11,32 @@ export function Head({onEnter}) {
 		</header>
 	);
 }
+
+const filters = [
+	{hash: '/', name: 'All'},
+	{hash: 'active', name: 'Active'},
+	{hash: 'completed', name: 'Completed'}
+];
+
+/**
+ * Stateless Footer component
+ */
+export function Foot({left, done, onClear}) {
+	return (
+		<footer className="footer">
+				<span className="todo-count">
+					<strong>{ left }</strong> { left > 1 ? 'items' : 'item' } left
+				</span>
+				<ul className="filters">
+					{
+						filters.map(obj => (
+							<li><a href={ obj.hash }>{ obj.name }</a></li>
+						))
+					}
+				</ul>
+				{ done > 0 ? (
+					<button className="clear-completed" onClick={ onClear }>Clear completed</button>
+				) : null }
+			</footer>
+	);
+}
