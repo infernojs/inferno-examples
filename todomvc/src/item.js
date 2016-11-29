@@ -9,6 +9,7 @@ export default class Item extends Component {
 	}
 
 	componentWillUpdate = ({data}) => (this.todo = data);
+	componentDidUpdate = () => this.editor.focus();
 
 	render({doToggle, doDelete, doSave, onBlur, onFocus}) {
 		console.log('updated item render');
@@ -27,6 +28,7 @@ export default class Item extends Component {
 				</div>
 
 				<input className="edit"
+					ref={el => { this.editor = el }}
 					value={ editing && title }
 					onblur={ onBlur }
 				/>
