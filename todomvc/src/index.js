@@ -46,13 +46,24 @@ class App extends Component {
 		model.toggle(todo)
 	);
 
+	toggleAll = ev => this.update(
+		model.toggleAll(ev.target.checked)
+	);
+
 	render(_, {todos}) {
+		const num = todos.length;
+		const numDone = todos.filter(t => t.completed).length;
+		const numAct = num - numDone;
+
 		return (
 			<div>
 				<Head onEnter={ this.add } />
 
 				<section className="main">
-					<input className="toggle-all" type="checkbox" />
+					<input className="toggle-all" type="checkbox"
+						onclick={ this.toggleAll }
+						checked={ numAct === 0 }
+					/>
 
 						<ul className="todo-list">
 							{
