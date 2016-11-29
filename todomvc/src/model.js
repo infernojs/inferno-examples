@@ -29,4 +29,8 @@ export default class Model {
 	toggleAll = completed => this.set(
 		this.data.map(t => ({...t, completed}))
 	)
+
+	clearCompleted = () => this.set(
+		this.data.filter(t => !t.completed)
+	)
 }
