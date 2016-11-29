@@ -1,5 +1,7 @@
 import Component from 'inferno-component';
 import { ENTER } from './share';
+import Model from './model';
+import Item from './item';
 
 const { render } = Inferno;
 const model = new Model();
@@ -27,6 +29,10 @@ class App extends Component {
 		model.put(todo, {editing: 1})
 	);
 
+	blur = todo => this.update(
+		model.put(todo, {editing: 0})
+	);
+
 	remove = todo => this.update(
 		model.del(todo)
 	);
@@ -51,17 +57,13 @@ class App extends Component {
 						<ul className="todo-list">
 							{
 								todos.map(t =>
-									<li>
-										<div className="view">
-											<input className="toggle" type="checkbox"
-												checked={ t.completed } onclick={ this.toggleOne }
-											/>
-
-											<label ondblclick={ this.focus }>{ t.title }</label>
-
-											<button className="destroy" onclick={ this.remove }></button>
-										</div>
-									</li>
+									<Item data={t}
+										onBlur={ () => this.blur(t) }
+										onFocus={ () => this.focus(t) }
+										doDelete={ () => this.remove(t) }
+										doSave={  }
+										doToggle={ () => this.toggleOne(t) }
+									/>
 								)
 							}
 						</ul>
