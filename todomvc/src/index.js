@@ -25,6 +25,10 @@ class App extends Component {
 		);
 	};
 
+	edit = (todo, val) => {
+		console.log('edit received: ', val);
+	}
+
 	focus = todo => this.update(
 		model.put(todo, {editing: 1})
 	);
@@ -61,7 +65,7 @@ class App extends Component {
 										onBlur={ () => this.blur(t) }
 										onFocus={ () => this.focus(t) }
 										doDelete={ () => this.remove(t) }
-										doSave={  }
+										doSave={ val => this.edit(t, val) }
 										doToggle={ () => this.toggleOne(t) }
 									/>
 								)

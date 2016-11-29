@@ -19,6 +19,11 @@ export default class Item extends Component {
 		editing && cls.push('editing');
 		completed && cls.push('completed');
 
+		const handler = e => {
+			if (e.which === ESCAPE) return onBlur();
+			if (e.which === ENTER) return doSave(this.editor.value);
+		}
+
 		return (
 			<li className={ cls.join(' ') }>
 				<div className="view">
@@ -33,8 +38,8 @@ export default class Item extends Component {
 
 				<input className="edit"
 					ref={el => { this.editor = el }}
-					value={ editing && title }
-					onblur={ onBlur }
+					value={ editing && (this.state.text || title) }
+					onblur={ onBlur } onkeydown={ handler }
 				/>
 			</li>
 		);
