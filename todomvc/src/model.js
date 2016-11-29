@@ -20,5 +20,9 @@ export default class Model {
 		this.data.map(t => isEqual(t, todo) ? assign(todo, obj) : t)
 	)
 
+	del = todo => this.set(
+		this.data.filter(t => !isEqual(t, todo))
+	)
+
 	toggle = todo => this.put(todo, {completed: !todo.completed})
 }
