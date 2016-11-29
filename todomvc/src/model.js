@@ -1,3 +1,5 @@
+import { assign, isEqual } from './share';
+
 const STOR = window.localStorage;
 const STOR_ID = 'todos-inferno';
 
@@ -12,5 +14,9 @@ export default class Model {
 
 	add = str => this.set(
 		this.data.concat({title: str, completed: false})
+	)
+
+	put = (todo, obj) => this.set(
+		this.data.map(t => isEqual(t, todo) ? assign(todo, obj) : t)
 	)
 }
