@@ -22,7 +22,6 @@ class App extends Component {
 	};
 
 	render(_, {todos}) {
-		console.log(todos);
 		return (
 			<div>
 				<header className="header">
@@ -31,6 +30,14 @@ class App extends Component {
 						autocomplete="off" placeholder="What needs to be done?"
 					/>
 				</header>
+
+				<section className="main">
+					<input className="toggle-all" type="checkbox" />
+
+						<ul className="todo-list">
+							{ todos.map(t =>  <li>{ t.title }</li>) }
+						</ul>
+					</section>
 			</div>
 		)
 	}
