@@ -1,11 +1,12 @@
 {
   "private": true,
   "scripts": {
+    "dev": "webpack-dev-server",
     "build": "webpack -p"
   },
   "dependencies": {
-    "inferno": "beta15",
-    "inferno-component": "beta15",
+    "inferno": "beta18",
+    "inferno-component": "beta18",
     "todomvc-app-css": "^2.0.0",
     "todomvc-common": "^1.0.0"
   },
@@ -16,6 +17,7 @@
     "babel-preset-es2015": "^6.5.0",
     "babel-preset-es2015-loose": "^7.0.0",
     "babel-preset-stage-0": "^6.5.0",
-    "webpack": "^1.12.14"
+    "webpack": "^1.12.14",
+    "webpack-dev-server": "^1.14.1"
   }
 }

@@ -2,6 +2,7 @@ module.exports = {
 	entry: './src/index.js',
 	output: {
 		path: './dist',
+		publicPath: 'dist',
 		filename: 'bundle.js'
 	},
 	module: {
@@ -14,5 +15,8 @@ module.exports = {
 				plugins: ['syntax-jsx', 'inferno']
 			}
 		}]
+	},
+	devServer: {
+		port: process.env.PORT || 8000
 	}
 };
