@@ -15,8 +15,12 @@ export default class Item extends Component {
 		console.log('updated item render');
 		const {title, completed, editing} = this.todo;
 
+		const cls = [];
+		editing && cls.push('editing');
+		completed && cls.push('completed');
+
 		return (
-			<li>
+			<li className={ cls.join(' ') }>
 				<div className="view">
 					<input className="toggle" type="checkbox"
 						checked={ completed } onclick={ doToggle }
