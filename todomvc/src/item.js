@@ -16,7 +16,6 @@ export default class Item extends Component {
 	setText = text => this.setState({text});
 
 	render({doToggle, doDelete, doSave, onBlur, onFocus}, {text}) {
-		console.log('updated item render');
 		const {title, completed, editing} = this.todo;
 
 		const cls = [];

@@ -1,6 +1,6 @@
 import Component from 'inferno-component';
+import { ENTER, filters, read } from './share';
 import { Head, Foot } from './base';
-import { ENTER } from './share';
 import Model from './model';
 import Item from './item';
 
@@ -9,10 +9,15 @@ const model = new Model();
 
 class App extends Component {
 	state = {
+		route: read(),
 		todos: model.get()
 	};
 
 	update = arr => this.setState({todos: arr});
+
+	componentWillMount = () => {
+		window.onhashchange = () => this.setState({route: read()});
+	};
 
 	add = e => {
 		if (e.which !== ENTER) return;
@@ -54,9 +59,10 @@ class App extends Component {
 		model.clearCompleted()
 	);
 
-	render(_, {todos}) {
+	render(_, {todos, route}) {
 		const num = todos.length;
-		const numDone = todos.filter(t => t.completed).length;
+		const shown = todos.filter(filters[route]);
+		const numDone = todos.filter(filters.completed).length;
 		const numAct = num - numDone;
 
 		return (
@@ -71,7 +77,7 @@ class App extends Component {
 
 						<ul className="todo-list">
 							{
-								todos.map(t =>
+								shown.map(t =>
 									<Item data={t}
 										onBlur={ () => this.blur(t) }
 										onFocus={ () => this.focus(t) }
@@ -86,8 +92,8 @@ class App extends Component {
 				) : null }
 
 				{ (numAct || numDone) ? (
-					<Foot left={numAct} done={numDone}
-						onClear={ this.clearCompleted }
+					<Foot onClear={ this.clearCompleted }
+						left={numAct} done={numDone} route={route}
 					/>
 				) : null }
 			</div>

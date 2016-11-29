@@ -5,6 +5,20 @@
 export const ENTER = 13;
 export const ESCAPE = 27;
 
+export const filters = {
+	all: t => true,
+	active: t => !t.completed,
+	completed: t => t.completed
+}
+
+/**
+ * Read the `location.hash` value
+ * @return {String}
+ */
+export function read() {
+	return location.hash.replace('#/', '') || 'all';
+}
+
 /**
  * Modified `Object.assign` shim
  * - always writes to new object

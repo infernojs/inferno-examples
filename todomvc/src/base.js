@@ -1,3 +1,5 @@
+import { states } from './share';
+
 /**
  * Stateless Header component
  */
@@ -12,16 +14,16 @@ export function Head({onEnter}) {
 	);
 }
 
-const filters = [
-	{hash: '/', name: 'All'},
-	{hash: 'active', name: 'Active'},
-	{hash: 'completed', name: 'Completed'}
+export const links = [
+	{hash: '#/', name: 'All'},
+	{hash: '#/active', name: 'Active'},
+	{hash: '#/completed', name: 'Completed'}
 ];
 
 /**
  * Stateless Footer component
  */
-export function Foot({left, done, onClear}) {
+export function Foot({left, done, route, onClear}) {
 	return (
 		<footer className="footer">
 				<span className="todo-count">
@@ -29,8 +31,12 @@ export function Foot({left, done, onClear}) {
 				</span>
 				<ul className="filters">
 					{
-						filters.map(obj => (
-							<li><a href={ obj.hash }>{ obj.name }</a></li>
+						links.map(({hash, name}) => (
+							<li>
+								<a href={ hash } className={ name.toLowerCase() === route ? 'selected' : '' }>
+									{ name }
+								</a>
+							</li>
 						))
 					}
 				</ul>
