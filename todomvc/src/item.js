@@ -8,9 +8,11 @@ export default class Item extends Component {
 		this.state = {text: data.title};
 	}
 
-	render({data, doToggle, doDelete, doSave, onBlur, onFocus}) {
+	componentWillUpdate = ({data}) => (this.todo = data);
+
+	render({doToggle, doDelete, doSave, onBlur, onFocus}) {
 		console.log('updated item render');
-		const {title, completed, editing} = data;
+		const {title, completed, editing} = this.todo;
 
 		return (
 			<li>
