@@ -1,6 +1,6 @@
 import Component from 'inferno-component';
+import { Head, Foot } from './base';
 import { ENTER } from './share';
-import { Head } from './base';
 import Model from './model';
 import Item from './item';
 
@@ -50,6 +50,10 @@ class App extends Component {
 		model.toggleAll(ev.target.checked)
 	);
 
+	clearCompleted = () => this.update(
+		model.clearCompleted()
+	);
+
 	render(_, {todos}) {
 		const num = todos.length;
 		const numDone = todos.filter(t => t.completed).length;
@@ -62,8 +66,7 @@ class App extends Component {
 				{ num ? (
 					<section className="main">
 						<input className="toggle-all" type="checkbox"
-							onclick={ this.toggleAll }
-							checked={ numAct === 0 }
+							onclick={ this.toggleAll } checked={ numAct === 0 }
 						/>
 
 						<ul className="todo-list">
@@ -80,6 +83,12 @@ class App extends Component {
 							}
 						</ul>
 					</section>
+				) : null }
+
+				{ (numAct || numDone) ? (
+					<Foot left={numAct} done={numDone}
+						onClear={ this.clearCompleted }
+					/>
 				) : null }
 			</div>
 		)
