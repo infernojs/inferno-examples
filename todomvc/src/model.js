@@ -19,4 +19,6 @@ export default class Model {
 	put = (todo, obj) => this.set(
 		this.data.map(t => isEqual(t, todo) ? assign(todo, obj) : t)
 	)
+
+	toggle = todo => this.put(todo, {completed: !todo.completed})
 }

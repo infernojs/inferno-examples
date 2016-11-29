@@ -25,6 +25,10 @@ class App extends Component {
 		todos: model.put(todo, {editing: 1})
 	});
 
+	toggleOne = todo => this.setState({
+		todos: model.toggle(todo)
+	});
+
 	render(_, {todos}) {
 		return (
 			<div>
@@ -43,8 +47,12 @@ class App extends Component {
 								todos.map(t =>
 									<li>
 										<div className="view">
-											<input className="toggle" type="checkbox" checked={ t.completed } />
+											<input className="toggle" type="checkbox"
+												checked={ t.completed } onclick={ this.toggleOne }
+											/>
+
 											<label ondblclick={ this.focus }>{ t.title }</label>
+
 											<button className="destroy"></button>
 										</div>
 									</li>
