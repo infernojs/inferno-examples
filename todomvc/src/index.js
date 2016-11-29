@@ -25,9 +25,9 @@ class App extends Component {
 		);
 	};
 
-	edit = (todo, val) => {
-		console.log('edit received: ', val);
-	}
+	edit = (todo, val) => this.update(
+		model.put(todo, {title: val.trim(), editing: 0})
+	);
 
 	focus = todo => this.update(
 		model.put(todo, {editing: 1})

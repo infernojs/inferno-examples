@@ -11,7 +11,9 @@ export default class Item extends Component {
 	componentWillUpdate = ({data}) => (this.todo = data);
 	componentDidUpdate = () => this.editor.focus();
 
-	render({doToggle, doDelete, doSave, onBlur, onFocus}) {
+	setText = text => this.setState({text});
+
+	render({doToggle, doDelete, doSave, onBlur, onFocus}, {text}) {
 		console.log('updated item render');
 		const {title, completed, editing} = this.todo;
 
@@ -21,7 +23,7 @@ export default class Item extends Component {
 
 		const handler = e => {
 			if (e.which === ESCAPE) return onBlur();
-			if (e.which === ENTER) return doSave(this.editor.value);
+			if (e.which === ENTER) return doSave(text);
 		}
 
 		return (
@@ -38,8 +40,9 @@ export default class Item extends Component {
 
 				<input className="edit"
 					ref={el => { this.editor = el }}
-					value={ editing && (this.state.text || title) }
+					value={ editing && text }
 					onblur={ onBlur } onkeydown={ handler }
+					oninput={ e => this.setText(e.target.value) }
 				/>
 			</li>
 		);
