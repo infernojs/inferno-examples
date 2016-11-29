@@ -1,5 +1,6 @@
 import Component from 'inferno-component';
 import { ENTER } from './share';
+import { Head } from './base';
 import Model from './model';
 import Item from './item';
 
@@ -48,12 +49,7 @@ class App extends Component {
 	render(_, {todos}) {
 		return (
 			<div>
-				<header className="header">
-					<h1>todos</h1>
-					<input className="new-todo" autofocus onkeydown={ this.add }
-						autocomplete="off" placeholder="What needs to be done?"
-					/>
-				</header>
+				<Head onEnter={ this.add } />
 
 				<section className="main">
 					<input className="toggle-all" type="checkbox" />
