@@ -9,11 +9,8 @@ const routes = (
   <Router history={ history }>
     <Route component={ App }>
       <Route path="/" component={ Home } />
-
-      <Route path="/users" component={ Users }>
-        <Route path="/users/:username" component={ User } />
-      </Route>
-
+      <Route path="/users" component={ Users } />
+      <Route path="/users/:username" component={ User } />
       <Route path="*" component={ NoMatch } />
     </Route>
   </Router>
