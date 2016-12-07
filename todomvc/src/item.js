@@ -31,12 +31,12 @@ export default class Item extends Component {
 			<li className={ cls.join(' ') }>
 				<div className="view">
 					<input className="toggle" type="checkbox"
-						checked={ completed } onclick={ doToggle }
+						checked={ completed } onClick={ doToggle }
 					/>
 
 					<label ondblclick={ onFocus }>{ title }</label>
 
-					<button className="destroy" onclick={ doDelete }></button>
+					<button className="destroy" onClick={ doDelete }></button>
 				</div>
 
 				<input className="edit"

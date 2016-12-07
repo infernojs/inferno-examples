@@ -5,8 +5,8 @@
     "build": "webpack -p"
   },
   "dependencies": {
-    "inferno": "beta18",
-    "inferno-component": "beta18",
+    "inferno": "beta32",
+    "inferno-component": "beta32",
     "todomvc-app-css": "^2.0.0",
     "todomvc-common": "^1.0.0"
   },

@@ -72,7 +72,7 @@ class App extends Component {
 				{ num ? (
 					<section className="main">
 						<input className="toggle-all" type="checkbox"
-							onclick={ this.toggleAll } checked={ numAct === 0 }
+							onClick={ this.toggleAll } checked={ numAct === 0 }
 						/>
 
 						<ul className="todo-list">
