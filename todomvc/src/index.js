@@ -1,3 +1,4 @@
+import Inferno from 'inferno';
 import Component from 'inferno-component';
 import { ENTER, filters, read } from './share';
 import { Head, Foot } from './base';

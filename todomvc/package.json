@@ -13,7 +13,7 @@
   "devDependencies": {
     "babel-core": "^6.5.2",
     "babel-loader": "^6.2.1",
-    "babel-plugin-inferno": "beta12",
+    "babel-plugin-inferno": "beta13",
     "babel-preset-es2015": "^6.5.0",
     "babel-preset-es2015-loose": "^7.0.0",
     "babel-preset-stage-0": "^6.5.0",

@@ -1,3 +1,4 @@
+import Inferno from 'inferno';
 import Component from 'inferno-component';
 import { ESCAPE, ENTER, isEqual } from './share';
 
@@ -6,6 +7,7 @@ export default class Item extends Component {
 		super(props);
 		this.todo = data;
 		this.state = {text: data.title};
+		this.editor = null;
 	}
 
 	componentWillReceiveProps = ({data}) => this.setText(data.title);

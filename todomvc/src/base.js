@@ -1,3 +1,4 @@
+import Inferno from 'inferno';
 import { states } from './share';
 
 /**
