@@ -13,7 +13,7 @@ module.exports = {
 			exclude: /node_modules/,
 			loader: 'babel',
 			query: {
-				presets: ['es2015-loose', 'stage-0'],
+				presets: ['es2015-loose'],
 				plugins: ['syntax-jsx', 'inferno']
 			}
 		}]
