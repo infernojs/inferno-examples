@@ -2,7 +2,8 @@
   "private": true,
   "scripts": {
     "dev": "webpack-dev-server",
-    "build": "webpack -p"
+    "build": "webpack -p",
+    "test": "cd test && npm test"
   },
   "dependencies": {
     "inferno": "beta32",

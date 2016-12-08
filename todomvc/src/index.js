@@ -32,9 +32,16 @@ class App extends Component {
 		);
 	};
 
-	edit = (todo, val) => this.update(
-		model.put(todo, {title: val.trim(), editing: 0})
-	);
+	edit = (todo, val) => {
+		val = val.trim();
+		if (val.length) {
+			this.update(
+				model.put(todo, {title: val, editing: 0})
+			);
+		} else {
+			this.remove(todo);
+		}
+	};
 
 	focus = todo => this.update(
 		model.put(todo, {editing: 1})
