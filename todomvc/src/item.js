@@ -24,10 +24,14 @@ export default class Item extends Component {
 		editing && cls.push('editing');
 		completed && cls.push('completed');
 
-		const handler = e => {
+		const handleKeydown = e => {
 			if (e.which === ESCAPE) return onBlur();
 			if (e.which === ENTER) return doSave(text);
-		}
+		};
+
+		// tmp fix
+		const handleBlur = () => doSave(text);
+		const handleInput = e => this.setText(e.target.value);
 
 		return (
 			<li className={ cls.join(' ') }>
@@ -44,8 +48,9 @@ export default class Item extends Component {
 				<input className="edit"
 					ref={el => { this.editor = el }}
 					value={ editing && text }
-					onblur={ onBlur } onkeydown={ handler }
-					oninput={ e => this.setText(e.target.value) }
+					onblur={ handleBlur }
+					oninput={ handleInput }
+					onkeydown={ handleKeydown }
 				/>
 			</li>
 		);
