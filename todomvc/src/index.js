@@ -5,95 +5,117 @@ import { Head, Foot } from './base';
 import Model from './model';
 import Item from './item';
 
-const { render } = Inferno;
 const model = new Model();
 
 class App extends Component {
-	state = {
-		route: read(),
-		todos: model.get()
-	};
+	constructor(args) {
+		super(args);
+		this.state = {
+			route: read(),
+			todos: model.get()
+		};
+	}
 
-	update = arr => this.setState({todos: arr});
+	update(arr) {
+		this.setState({todos: arr});
+	}
 
-	componentWillMount = () => {
-		window.onhashchange = () => this.setState({route: read()});
-	};
+	componentWillMount() {
+		window.onhashchange = function () {
+			this.setState({route: read()});
+		}.bind(this);
+	}
 
-	add = e => {
+	add(e) {
 		if (e.which !== ENTER) return;
 
 		const val = e.target.value.trim();
 		if (!val) return;
 
 		e.target.value = '';
+
 		this.update(
 			model.add(val)
 		);
-	};
+	}
 
-	edit = (todo, val) => {
+	edit(todo, val) {
 		val = val.trim();
-		if (val.length) {
-			this.update(
-				model.put(todo, {title: val, editing: 0})
-			);
-		} else {
-			this.remove(todo);
+		if (!val) {
+			return this.remove(todo);
 		}
-	};
 
-	focus = todo => this.update(
-		model.put(todo, {editing: 1})
-	);
+		this.update(
+			model.put(todo, {title: val, editing: 0})
+		);
+	}
 
-	blur = todo => this.update(
-		model.put(todo, {editing: 0})
-	);
+	focus(todo) {
+		this.update(
+			model.put(todo, {editing: 1})
+		);
+	}
 
-	remove = todo => this.update(
-		model.del(todo)
-	);
+	blur(todo) {
+		this.update(
+			model.put(todo, {editing: 0})
+		);
+	}
 
-	toggleOne = todo => this.update(
-		model.toggle(todo)
-	);
+	remove(todo) {
+		this.update(
+			model.del(todo)
+		);
+	}
 
-	toggleAll = ev => this.update(
-		model.toggleAll(ev.target.checked)
-	);
+	toggleOne(todo) {
+		this.update(
+			model.toggle(todo)
+		);
+	}
 
-	clearCompleted = () => this.update(
-		model.clearCompleted()
-	);
+	toggleAll(ev) {
+		this.update(
+			model.toggleAll(ev.target.checked)
+		);
+	}
 
-	render(_, {todos, route}) {
-		const num = todos.length;
-		const shown = todos.filter(filters[route]);
-		const numDone = todos.filter(filters.completed).length;
+	clearCompleted() {
+		this.update(
+			model.clearCompleted()
+		);
+	}
+
+	render(_, state) {
+		const self = this;
+		const num = state.todos.length;
+		const shown = state.todos.filter(filters[state.route]);
+		const numDone = state.todos.filter(filters.completed).length;
 		const numAct = num - numDone;
 
 		return (
 			<div>
-				<Head onEnter={ this.add } />
+				<Head onEnter={ self.add.bind(self) } />
 
 				{ num ? (
 					<section className="main">
 						<input className="toggle-all" type="checkbox"
-							onClick={ this.toggleAll } checked={ numAct === 0 }
+							onClick={ self.toggleAll.bind(self) } checked={ numAct === 0 }
 						/>
 
 						<ul className="todo-list">
 							{
-								shown.map(t =>
-									<Item data={t}
-										onBlur={ () => this.blur(t) }
-										onFocus={ () => this.focus(t) }
-										doDelete={ () => this.remove(t) }
-										doSave={ val => this.edit(t, val) }
-										doToggle={ () => this.toggleOne(t) }
-									/>
-								)
+								shown.map(function (t) {
+									return (
+										<Item data={t}
+											onBlur={ self.blur.bind(self, t) }
+											onFocus={ self.focus.bind(self, t) }
+											doDelete={ self.remove.bind(self, t) }
+											doToggle={ self.toggleOne.bind(self, t) }
+											doSave={ self.edit.bind(self, t) }
+										/>
+									);
+								})
 							}
 						</ul>
 					</section>
@@ -101,7 +123,7 @@ class App extends Component {
 
 				{ (numAct || numDone) ? (
 					<Foot onClear={ this.clearCompleted }
-						left={numAct} done={numDone} route={route}
+						left={numAct} done={numDone} route={state.route}
 					/>
 				) : null }
 			</div>
@@ -109,4 +131,4 @@ class App extends Component {
 	}
 }
 
-render(<App />, document.getElementById('app'));
+Inferno.render(<App />, document.getElementById('app'));

@@ -4,33 +4,55 @@ const STOR = window.localStorage;
 const STOR_ID = 'todos-inferno';
 
 export default class Model {
-	get = () => (this.data = JSON.parse(STOR.getItem(STOR_ID) || '[]'))
+	get() {
+		return (this.data = JSON.parse(STOR.getItem(STOR_ID) || '[]'));
+	}
 
-	set = arr => {
+	set(arr) {
 		this.data = arr || this.data || [];
 		STOR.setItem(STOR_ID, JSON.stringify(this.data));
 		return this.data;
 	}
 
-	add = str => this.set(
-		this.data.concat({title: str, completed: false})
-	)
+	add(str) {
+		return this.set(
+			this.data.concat({title: str, completed: false})
+		);
+	}
 
-	put = (todo, obj) => this.set(
-		this.data.map(t => isEqual(t, todo) ? assign(todo, obj) : t)
-	)
+	put(todo, obj) {
+		return this.set(
+			this.data.map(function (t) {
+				return isEqual(t, todo) ? assign(todo, obj) : t;
+			})
+		);
+	}
 
-	del = todo => this.set(
-		this.data.filter(t => !isEqual(t, todo))
-	)
+	del(todo) {
+		return this.set(
+			this.data.filter(function (t) {
+				return !isEqual(t, todo);
+			})
+		);
+	}
 
-	toggle = todo => this.put(todo, {completed: !todo.completed})
+	toggle(todo) {
+		return this.put(todo, {completed: !todo.completed});
+	}
 
-	toggleAll = completed => this.set(
-		this.data.map(t => ({...t, completed}))
-	)
+	toggleAll(bool) {
+		return this.set(
+			this.data.map(function (t) {
+				return assign(t, {completed: bool});
+			})
+		);
+	}
 
-	clearCompleted = () => this.set(
-		this.data.filter(t => !t.completed)
-	)
+	clearCompleted() {
+		return this.set(
+			this.data.filter(function (t) {
+				return !t.completed;
+			})
+		);
+	}
 }

@@ -4,11 +4,11 @@ import { states } from './share';
 /**
  * Stateless Header component
  */
-export function Head({onEnter}) {
+export function Head(props) {
 	return (
 		<header className="header">
 			<h1>todos</h1>
-			<input className="new-todo" autofocus onkeydown={ onEnter }
+			<input className="new-todo" autofocus onkeydown={ props.onEnter }
 				autocomplete="off" placeholder="What needs to be done?"
 			/>
 		</header>
@@ -24,25 +24,25 @@ export const links = [
 /**
  * Stateless Footer component
  */
-export function Foot({left, done, route, onClear}) {
+export function Foot(props) {
 	return (
 		<footer className="footer">
 				<span className="todo-count">
-					<strong>{ left }</strong> { left > 1 ? 'items' : 'item' } left
+					<strong>{ props.left }</strong> { props.left > 1 ? 'items' : 'item' } left
 				</span>
 				<ul className="filters">
 					{
-						links.map(({hash, name}) => (
-							<li>
-								<a href={ hash } className={ name.toLowerCase() === route ? 'selected' : '' }>
-									{ name }
-								</a>
-							</li>
-						))
+						links.map(function (link) {
+							return (
+								<li>
+									<a href={ link.hash } className={ link.name.toLowerCase() === props.route ? 'selected' : '' }>{ link.name }</a>
+								</li>
+							)
+						})
 					}
 				</ul>
-				{ done > 0 ? (
-					<button className="clear-completed" onClick={ onClear }>Clear completed</button>
+				{ props.done > 0 ? (
+					<button className="clear-completed" onClick={ props.onClear }>Clear completed</button>
 				) : null }
 			</footer>
 	);

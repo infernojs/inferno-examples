@@ -6,10 +6,16 @@ export const ENTER = 13;
 export const ESCAPE = 27;
 
 export const filters = {
-	all: t => true,
-	active: t => !t.completed,
-	completed: t => t.completed
-}
+	all: function () {
+		return true;
+	},
+	active: function (t) {
+		return !t.completed;
+	},
+	completed: function (t) {
+		return t.completed;
+	}
+};
 
 /**
  * Read the `location.hash` value
