@@ -1,0 +1,11 @@
+language: node_js
+
+node_js:
+  - 6
+
+env:
+  - TEST_DIR=todomvc
+
+before_script:
+  - cd $TEST_DIR
+  - if [[ stat test/package.json ]]; then cd test && npm install && cd ..; fi
