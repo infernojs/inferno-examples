@@ -122,7 +122,7 @@ class App extends Component {
 				) : null }
 
 				{ (numAct || numDone) ? (
-					<Foot onClear={ this.clearCompleted }
+					<Foot onClear={ self.clearCompleted.bind(self) }
 						left={numAct} done={numDone} route={state.route}
 					/>
 				) : null }
