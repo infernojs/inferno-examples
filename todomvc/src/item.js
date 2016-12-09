@@ -1,82 +1,58 @@
 import Inferno from 'inferno';
-import Component from 'inferno-component';
 import { ESCAPE, ENTER, isEqual } from './share';
 
-export default class Item extends Component {
-	constructor(args) {
-		// theres probably a better way
-		const data = args.data;
-		delete args.data
+function handleKeydown(e) {
+	if (e.which === ENTER) return this.doSave(e.target.value);
+	if (e.which === ESCAPE) return this.doSave(this.data.title);
+}
 
-		super(args);
+function handleBlur(e) {
+	this.doSave(e.target.value);
+}
 
-		this.todo = data;
-		this.state = {text: data.title};
-		this.editor = null;
-	}
+function handleFocus() {
+	this.doEdit(this.data.title);
+}
 
-	componentWillReceiveProps(props) {
-		this.setText(props.data.title);
-	}
+function handleInput(e) {
+	this.doEdit(e.target.value);
+}
 
-	shouldComponentUpdate(props, state) {
-		return !(isEqual(props.data, this.todo) && state.text === this.state.text);
-	}
+function setFocusRef(el) {
+	this.data.editing && el.focus();
+}
 
-	componentWillUpdate(props) {
-		this.todo = props.data;
-	}
+export function itemSCU(prev, next) {
+	return !isEqual(next.data, prev.data);
+}
 
-	componentDidUpdate() {
-		this.editor.focus();
-	}
+export function Item(props) {
+	const todo = props.data;
 
-	setText(str) {
-		this.setState({text: str});
-	}
+	const cls = [];
+	todo.editing && cls.push('editing');
+	todo.completed && cls.push('completed');
 
-	render(props, state) {
-		const self = this;
-		const todo = self.todo;
-
-		const cls = [];
-		todo.editing && cls.push('editing');
-		todo.completed && cls.push('completed');
-
-		const handleKeydown = function (e) {
-			if (e.which === ESCAPE) return props.onBlur();
-			if (e.which === ENTER) return props.doSave(state.text);
-		};
-
-		// tmp fix
-		const handleBlur = function () {
-			props.doSave(state.text);
-		};
-
-		const handleInput = function (e) {
-			self.setText(e.target.value);
-		};
-
-		return (
-			<li className={ cls.join(' ') }>
-				<div className="view">
-					<input className="toggle" type="checkbox"
-						checked={ todo.completed } onClick={ props.doToggle }
-					/>
-
-					<label ondblclick={ props.onFocus }>{ todo.title }</label>
-
-					<button className="destroy" onClick={ props.doDelete }></button>
-				</div>
-
-				<input className="edit"
-					ref={function (el) { self.editor = el }}
-					value={ todo.editing && state.text }
-					onblur={ handleBlur }
-					oninput={ handleInput }
-					onkeydown={ handleKeydown }
+	return (
+		<li className={ cls.join(' ') }>
+			<div className="view">
+				<input className="toggle" type="checkbox"
+					checked={ todo.completed } onClick={ props.doToggle }
 				/>
-			</li>
-		);
-	}
+
+				<label ondblclick={ handleFocus.bind(props) }>{ todo.title }</label>
+
+				<button className="destroy" onClick={ props.doDelete }></button>
+			</div>
+
+			<input
+				className="edit"
+				value={ todo.text }
+				ref={ setFocusRef.bind(props) }
+				onblur={ handleBlur.bind(props) }
+				oninput={ handleInput.bind(props) }
+				onkeydown={ handleKeydown.bind(props) }
+			/>
+		</li>
+	);
 }

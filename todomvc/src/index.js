@@ -1,9 +1,9 @@
 import Inferno from 'inferno';
 import Component from 'inferno-component';
 import { ENTER, filters, read } from './share';
+import { Item, itemSCU } from './item';
 import { Head, Foot } from './base';
 import Model from './model';
-import Item from './item';
 
 const model = new Model();
 
@@ -26,39 +26,34 @@ class App extends Component {
 		}.bind(this);
 	}
 
-	add(e) {
-		if (e.which !== ENTER) return;
+	add(ev) {
+		if (ev.which !== ENTER) return;
 
-		const val = e.target.value.trim();
+		const val = ev.target.value.trim();
 		if (!val) return;
 
-		e.target.value = '';
+		ev.target.value = '';
 
 		this.update(
 			model.add(val)
 		);
 	}
 
-	edit(todo, val) {
+	save(todo, val) {
 		val = val.trim();
+
 		if (!val) {
 			return this.remove(todo);
 		}
 
 		this.update(
-			model.put(todo, {title: val, editing: 0})
+			model.put(todo, {title: val, editing: 0, text: val})
 		);
 	}
 
-	focus(todo) {
+	edit(todo, val) {
 		this.update(
-			model.put(todo, {editing: 1})
-		);
-	}
-
-	blur(todo) {
-		this.update(
-			model.put(todo, {editing: 0})
+			model.put(todo, {editing: 1, text: val})
 		);
 	}
 
@@ -108,11 +103,11 @@ class App extends Component {
 								shown.map(function (t) {
 									return (
 										<Item data={t}
-											onBlur={ self.blur.bind(self, t) }
-											onFocus={ self.focus.bind(self, t) }
-											doDelete={ self.remove.bind(self, t) }
+											onComponentShouldUpdate={ itemSCU }
+											doEdit={ self.edit.bind(self, t) }
+											doSave={ self.save.bind(self, t) }
+											doRemove={ self.remove.bind(self, t) }
 											doToggle={ self.toggleOne.bind(self, t) }
-											doSave={ self.edit.bind(self, t) }
 										/>
 									);
 								})
