@@ -19,7 +19,7 @@ function handleInput(e) {
 }
 
 function setFocusRef(el) {
-	this.data.editing && el.focus();
+	this.data.editing && el && el.focus();
 }
 
 export function itemSCU(prev, next) {
