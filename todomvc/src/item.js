@@ -2,8 +2,8 @@ import Inferno from 'inferno';
 import { ESCAPE, ENTER, isEqual } from './share';
 
 function handleKeydown(e) {
-	if (e.which === ENTER) return this.doSave(e.target.value);
-	if (e.which === ESCAPE) return this.doSave(this.data.title);
+	if (e.which === ENTER) return e.target.blur();
+	if (e.which === ESCAPE) return (this.doEdit(this.data.title), e.target.blur());
 }
 
 function handleBlur(e) {
