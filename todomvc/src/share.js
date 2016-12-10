@@ -18,15 +18,6 @@ export const filters = {
 };
 
 /**
- * Read the `location.hash` value
- * @return {String}
- */
-export function read() {
-	// return location.hash.replace('#/', '') || 'all';
-	return String(location.hash || 'all').split('/').pop();
-}
-
-/**
  * Modified `Object.assign` shim
  * - always writes to new object
  * @return {Object}
@@ -41,27 +32,6 @@ export function assign() {
 		}
 	}
 	return tar;
-}
-
-/**
- * Are two Objects equal values?
- * @param  {Object} a
- * @param  {Object} b
- * @return {Boolean}
- */
-export function isEqual(a, b) {
-	// Create arrays of property names
-	const aProps = Object.getOwnPropertyNames(a);
-	const bProps = Object.getOwnPropertyNames(b);
-
-	if (aProps.length !== bProps.length) return false;
-
-	for (let i = 0; i < aProps.length; i++) {
-		const k = aProps[i];
-		if (a[k] !== b[k]) return false;
-	}
-
-	return true;
 }
 
 export function uuid() {
@@ -79,3 +49,24 @@ export function uuid() {
 export function pluralize(num, str) {
 	return num === 1 ? num : `${num}s`;
 }
+
+/**
+ * Are two Objects equal values?
+ * @param  {Object} a
+ * @param  {Object} b
+ * @return {Boolean}
+ */
+// export function isEqual(a, b) {
+// 	// Create arrays of property names
+// 	const aProps = Object.getOwnPropertyNames(a);
+// 	const bProps = Object.getOwnPropertyNames(b);
+
+// 	if (aProps.length !== bProps.length) return false;
+
+// 	for (let i = 0; i < aProps.length; i++) {
+// 		const k = aProps[i];
+// 		if (a[k] !== b[k]) return false;
+// 	}
+
+// 	return true;
+// }

@@ -1,5 +1,5 @@
 import Inferno from 'inferno';
-import { states } from './share';
+import { states, pluralize } from './share';
 
 /**
  * Stateless Header component
@@ -28,7 +28,7 @@ export function Foot(props) {
 	return (
 		<footer className="footer">
 				<span className="todo-count">
-					<strong>{ props.left }</strong> { props.left > 1 ? 'items' : 'item' } left
+					<strong>{ props.left }</strong> { pluralize(props.left, 'item') } left
 				</span>
 				<ul className="filters">
 					{

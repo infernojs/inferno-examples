@@ -47,7 +47,6 @@ export default class Model {
 
 	del(todo) {
 		this.data = this.data.filter(function (t) {
-			// return !isEqual(t, todo);
 			return t !== todo;
 		});
 		this.inform();
@@ -55,7 +54,6 @@ export default class Model {
 
 	toggleOne(todo) {
 		this.put(todo, {completed: !todo.completed});
-		// return this.put(todo, {completed: !todo.completed});
 	}
 
 	toggleAll(bool) {
