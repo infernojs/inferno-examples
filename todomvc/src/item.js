@@ -1,14 +1,21 @@
 import Inferno from 'inferno';
 import { ESCAPE, ENTER, isEqual } from './share';
 
+function handleSubmit(e) {
+	const val = e.target.value.trim();
+	const todo = this.data;
+	val ? this.doSave(todo, val) : doRemove(todo);
+}
+
 function handleKeydown(e) {
-	if (e.which === ENTER) return e.target.blur();
+	// if (e.which === ENTER) return e.target.blur();
+	if (e.which === ENTER) return handleSubmit.bind(this, e);
 	if (e.which === ESCAPE) return (this.doEdit(this.data.title), e.target.blur());
 }
 
-function handleBlur(e) {
-	this.doSave(e.target.value);
-}
+// function handleBlur(e) {
+// 	this.doSave(e.target.value);
+// }
 
 function handleFocus() {
 	this.doEdit(this.data.title);
@@ -19,19 +26,21 @@ function handleInput(e) {
 }
 
 function setFocusRef(el) {
-	this.data.editing && el && el.focus();
+	this.edits && el && el.focus();
 }
 
 export function itemSCU(prev, next) {
-	return !isEqual(next.data, prev.data);
+	return next.data !== prev.data || next.edits;
+	// return !isEqual(next.data, prev.data);
 }
 
 export function Item(props) {
+	console.log('update item', props);
 	const todo = props.data;
 
 	const cls = [];
-	todo.editing && cls.push('editing');
 	todo.completed && cls.push('completed');
+	props.edits && cls.push('editing');
 
 	return (
 		<li className={ cls.join(' ') }>
@@ -40,16 +49,16 @@ export function Item(props) {
 					checked={ todo.completed } onClick={ props.doToggle }
 				/>
 
-				<label ondblclick={ handleFocus.bind(props) }>{ todo.title }</label>
+				<label ondblclick={ props.doEdit }>{ todo.title }</label>
 
-				<button className="destroy" onClick={ props.doDelete }></button>
+				<button className="destroy" onClick={ props.doRemove }></button>
 			</div>
 
 			<input
 				className="edit"
-				value={ todo.text }
+				value={ props.edits }
 				ref={ setFocusRef.bind(props) }
-				onblur={ handleBlur.bind(props) }
+				onblur={ handleSubmit.bind(props) }
 				oninput={ handleInput.bind(props) }
 				onkeydown={ handleKeydown.bind(props) }
 			/>

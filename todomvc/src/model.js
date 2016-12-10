@@ -1,58 +1,74 @@
-import { assign, isEqual } from './share';
+import { assign, uuid } from './share';
 
-const STOR = window.localStorage;
 const STOR_ID = 'todos-inferno';
 
+function store(data) {
+	if (data) return localStorage[STOR_ID] = JSON.stringify(data);
+	const store = localStorage[STOR_ID];
+	return store && JSON.parse(store) || [];
+}
+
 export default class Model {
-	get() {
-		return (this.data = JSON.parse(STOR.getItem(STOR_ID) || '[]'));
+	constructor() {
+		this.data = store() || [];
+		this.onChanges = [];
 	}
 
-	set(arr) {
-		this.data = arr || this.data || [];
-		STOR.setItem(STOR_ID, JSON.stringify(this.data));
-		return this.data;
+	sub(fn) {
+		this.onChanges = this.onChanges.concat(fn);
+	}
+
+	inform() {
+		store(this.data);
+		this.onChanges.forEach(function (fn) {
+			fn();
+		});
 	}
 
 	add(str) {
-		return this.set(
-			this.data.concat({title: str, completed: false})
-		);
+		this.data = this.data.concat({
+			id: uuid(),
+			title: str,
+			completed: false
+		});
+		this.inform();
 	}
 
 	put(todo, obj) {
-		return this.set(
-			this.data.map(function (t) {
-				return isEqual(t, todo) ? assign(todo, obj) : t;
-			})
-		);
+		this.data = this.data.map(function (t) {
+			return t !== todo ? t : assign(todo, obj);
+		});
+		this.inform();
+	}
+
+	save(todo, str) {
+		this.put(todo, {title: str});
 	}
 
 	del(todo) {
-		return this.set(
-			this.data.filter(function (t) {
-				return !isEqual(t, todo);
-			})
-		);
+		this.data = this.data.filter(function (t) {
+			// return !isEqual(t, todo);
+			return t !== todo;
+		});
+		this.inform();
 	}
 
-	toggle(todo) {
-		return this.put(todo, {completed: !todo.completed});
+	toggleOne(todo) {
+		this.put(todo, {completed: !todo.completed});
+		// return this.put(todo, {completed: !todo.completed});
 	}
 
 	toggleAll(bool) {
-		return this.set(
-			this.data.map(function (t) {
-				return assign(t, {completed: bool});
-			})
-		);
+		this.data = this.data.map(function (t) {
+			return assign(t, {completed: bool});
+		});
+		this.inform();
 	}
 
 	clearCompleted() {
-		return this.set(
-			this.data.filter(function (t) {
-				return !t.completed;
-			})
-		);
+		this.data = this.data.filter(function (t) {
+			return !t.completed;
+		});
+		this.inform();
 	}
 }

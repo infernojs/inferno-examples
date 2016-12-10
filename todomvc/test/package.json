@@ -10,6 +10,6 @@
     "selenium-webdriver": "~2.53.1"
   },
   "scripts": {
-    "test": "node server & mocha index.js --no-timeouts --reporter spec"
+    "test": "node server & mocha index.js --speedMode --no-timeouts --reporter spec"
   }
 }
