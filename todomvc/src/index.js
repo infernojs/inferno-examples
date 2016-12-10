@@ -7,20 +7,45 @@ import Model from './model';
 
 const model = new Model();
 
+function toggleOne(todo) {
+	model.toggleOne(todo);
+}
+
+function toggleAll(e) {
+	model.toggleAll(e.target.checked);
+}
+
+function clearCompleted() {
+	model.clearCompleted();
+}
+
+function addTodo(e) {
+	if (e.which !== ENTER) return;
+	const val = e.target.value.trim();
+	if (val) {
+		model.add(val);
+		e.target.value = '';
+	}
+}
+
+function saveTodo(todo, val) {
+	this.setState({editing: 0});
+	model.save(todo, val);
+}
+
+function focusTodo(todo) {
+	this.setState({editing: todo.id});
+}
+
+function removeTodo(todo) {
+	model.del(todo);
+}
+
 class App extends Component {
 	constructor(args) {
 		super(args);
-
 		// re-render on `inform()`
 		model.sub(this.setState.bind(this, {}));
-
-		this.add = this.add.bind(this);
-		this.toggleAll = this.toggleAll.bind(this);
-		this.clearCompleted = this.clearCompleted.bind(this);
-	}
-
-	update(arr) {
-		this.setState({todos: arr});
 	}
 
 	setRoute() {
@@ -36,41 +61,6 @@ class App extends Component {
 		this.setRoute();
 	}
 
-	add(ev) {
-		if (ev.which !== ENTER) return;
-
-		const val = ev.target.value.trim();
-		if (val) {
-			model.add(val);
-			ev.target.value = '';
-		}
-	}
-
-	focus(todo) {
-		this.setState({editing: todo.id});
-	}
-
-	save(todo, val) {
-		this.setState({editing: 0});
-		model.save(todo, val);
-	}
-
-	remove(todo) {
-		model.del(todo);
-	}
-
-	toggleOne(todo) {
-		model.toggleOne(todo);
-	}
-
-	toggleAll(ev) {
-		model.toggleAll(ev.target.checked);
-	}
-
-	clearCompleted() {
-		model.clearCompleted();
-	}
-
 	render(_, state) {
 		const todos = model.data;
 
@@ -82,12 +72,12 @@ class App extends Component {
 
 		return (
 			<div>
-				<Head onEnter={ this.add } />
+				<Head onEnter={ addTodo } />
 
 				{ num ? (
 					<section className="main">
 						<input className="toggle-all" type="checkbox"
-							onClick={ this.toggleAll } checked={ numAct === 0 }
+							onClick={ toggleAll } checked={ numAct === 0 }
 						/>
 
 						<ul className="todo-list">
@@ -95,10 +85,10 @@ class App extends Component {
 								shown.map(function (t) {
 									return (
 										<Item data={t}
-											doSave={ self.save.bind(self, t) }
-											doFocus={ self.focus.bind(self, t) }
-											doRemove={ self.remove.bind(self, t) }
-											doToggle={ self.toggleOne.bind(self, t) }
+											doSave={ saveTodo.bind(self, t) }
+											doFocus={ focusTodo.bind(self, t) }
+											doRemove={ removeTodo.bind(self, t) }
+											doToggle={ toggleOne.bind(self, t) }
 											onComponentShouldUpdate={ itemSCU }
 											editing={ t.id === state.editing }
 										/>
@@ -110,7 +100,7 @@ class App extends Component {
 				) : null }
 
 				{ (numAct || numDone) ? (
-					<Foot onClear={ this.clearCompleted }
+					<Foot onClear={ clearCompleted }
 						left={numAct} done={numDone} route={state.route}
 					/>
 				) : null }
