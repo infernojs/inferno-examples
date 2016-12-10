@@ -47,7 +47,7 @@ export function uuid() {
 }
 
 export function pluralize(num, str) {
-	return num === 1 ? num : `${num}s`;
+	return num === 1 ? str : `${str}s`;
 }
 
 /**

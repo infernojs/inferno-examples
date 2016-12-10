@@ -46,25 +46,13 @@ class App extends Component {
 		}
 	}
 
-	edit(todo) {
-		console.log('inside do edit', todo);
-		this.setState({
-			editing: todo.id,
-			editText: todo.title
-		});
-	}
-
-	cancel() {
-		this.setState({
-			editing: 0,
-			editText: ''
-		});
+	focus(todo) {
+		this.setState({editing: todo.id});
 	}
 
 	save(todo, val) {
-		console.log('inside save', todo, val);
-		model.save(todo, val);
 		this.setState({editing: 0});
+		model.save(todo, val);
 	}
 
 	remove(todo) {
@@ -85,8 +73,6 @@ class App extends Component {
 
 	render(_, state) {
 		const todos = model.data;
-		console.log('todos: ', todos);
-		console.log('state: ', state);
 
 		const self = this;
 		const num = todos.length;
@@ -109,13 +95,12 @@ class App extends Component {
 								shown.map(function (t) {
 									return (
 										<Item data={t}
-											doEdit={ self.edit.bind(self, t) }
 											doSave={ self.save.bind(self, t) }
+											doFocus={ self.focus.bind(self, t) }
 											doRemove={ self.remove.bind(self, t) }
 											doToggle={ self.toggleOne.bind(self, t) }
-											doCancel={ self.cancel.bind(self, t) }
 											onComponentShouldUpdate={ itemSCU }
-											edits={ (t.id === state.editing) && state.editText }
+											editing={ t.id === state.editing }
 										/>
 									);
 								})
