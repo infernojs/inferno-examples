@@ -28,15 +28,6 @@ function addTodo(e) {
 	}
 }
 
-function saveTodo(todo, val) {
-	this.setState({editing: 0});
-	model.save(todo, val);
-}
-
-function focusTodo(todo) {
-	this.setState({editing: todo.id});
-}
-
 function removeTodo(todo) {
 	model.del(todo);
 }
@@ -46,6 +37,8 @@ class App extends Component {
 		super(args);
 		// re-render on `inform()`
 		model.sub(this.setState.bind(this, {}));
+		this.focus = this.focus.bind(this);
+		this.save = this.save.bind(this);
 	}
 
 	setRoute() {
@@ -59,6 +52,15 @@ class App extends Component {
 		addEventListener('hashchange', this.setRoute.bind(this));
 		// find curr route
 		this.setRoute();
+	}
+
+	save(todo, val) {
+		this.setState({editing: 0});
+		model.save(todo, val);
+	}
+
+	focus(todo) {
+		this.setState({editing: todo.id});
 	}
 
 	render(_, state) {
@@ -85,10 +87,8 @@ class App extends Component {
 								shown.map(function (t) {
 									return (
 										<Item data={t}
-											doSave={ saveTodo.bind(self, t) }
-											doFocus={ focusTodo.bind(self, t) }
-											doRemove={ removeTodo.bind(self, t) }
-											doToggle={ toggleOne.bind(self, t) }
+											doSave={ self.save } doFocus={ self.focus }
+											doRemove={ removeTodo } doToggle={ toggleOne }
 											onComponentShouldUpdate={ itemSCU }
 											editing={ t.id === state.editing }
 										/>
