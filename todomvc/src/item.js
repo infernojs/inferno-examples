@@ -1,15 +1,18 @@
 import Inferno from 'inferno';
 import { ESCAPE, ENTER } from './share';
 
+const linkEvent = Inferno.linkEvent;
+
 function handleSubmit(e) {
+	const todo = this.data;
 	const val = e.target.value.trim();
-	val ? this.doSave(val) : this.doRemove();
+	val ? this.doSave(todo, val) : this.doRemove(todo);
 }
 
-function handleKeydown(e) {
+function handleKeydown(props, e) {
 	if (e.which === ENTER) return e.target.blur();
 	if (e.which === ESCAPE) {
-		e.target.value = this.data.title;
+		e.target.value = props.data.title;
 		return e.target.blur(); // saves
 	}
 }
@@ -36,19 +39,19 @@ export function Item(props) {
 		<li className={ cls.join(' ') }>
 			<div className="view">
 				<input className="toggle" type="checkbox"
-					checked={ todo.completed } onClick={ props.doToggle }
+					checked={ todo.completed } onClick={ linkEvent(todo, props.doToggle) }
 				/>
 
-				<label ondblclick={ props.doFocus }>{ todo.title }</label>
+				<label onDblClick={ linkEvent(todo, props.doFocus) }>{ todo.title }</label>
 
-				<button className="destroy" onClick={ props.doRemove }></button>
+				<button className="destroy" onClick={ linkEvent(todo, props.doRemove) }></button>
 			</div>
 
 			<input
 				className="edit"
 				ref={ setFocusRef.bind(props) }
 				onblur={ handleSubmit.bind(props) }
-				onkeydown={ handleKeydown.bind(props) }
+				onKeyDown={ linkEvent(props, handleKeydown) }
 			/>
 		</li>
 	);
