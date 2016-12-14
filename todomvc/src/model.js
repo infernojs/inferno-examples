@@ -1,36 +1,72 @@
-import { assign, isEqual } from './share';
+import { assign, uuid } from './share';
 
-const STOR = window.localStorage;
 const STOR_ID = 'todos-inferno';
 
-export default class Model {
-	get = () => (this.data = JSON.parse(STOR.getItem(STOR_ID) || '[]'))
+function store(data) {
+	if (data) return localStorage[STOR_ID] = JSON.stringify(data);
+	const store = localStorage[STOR_ID];
+	return store && JSON.parse(store) || [];
+}
 
-	set = arr => {
-		this.data = arr || this.data || [];
-		STOR.setItem(STOR_ID, JSON.stringify(this.data));
-		return this.data;
+export default class Model {
+	constructor() {
+		this.data = store() || [];
+		this.onChanges = [];
 	}
 
-	add = str => this.set(
-		this.data.concat({title: str, completed: false})
-	)
+	sub(fn) {
+		this.onChanges = this.onChanges.concat(fn);
+	}
 
-	put = (todo, obj) => this.set(
-		this.data.map(t => isEqual(t, todo) ? assign(todo, obj) : t)
-	)
+	inform() {
+		store(this.data);
+		this.onChanges.forEach(function (fn) {
+			fn();
+		});
+	}
 
-	del = todo => this.set(
-		this.data.filter(t => !isEqual(t, todo))
-	)
+	add(str) {
+		this.data = this.data.concat({
+			id: uuid(),
+			title: str,
+			completed: false
+		});
+		this.inform();
+	}
 
-	toggle = todo => this.put(todo, {completed: !todo.completed})
+	put(todo, obj) {
+		this.data = this.data.map(function (t) {
+			return t !== todo ? t : assign(todo, obj);
+		});
+		this.inform();
+	}
 
-	toggleAll = completed => this.set(
-		this.data.map(t => ({...t, completed}))
-	)
+	save(todo, str) {
+		this.put(todo, {title: str});
+	}
 
-	clearCompleted = () => this.set(
-		this.data.filter(t => !t.completed)
-	)
+	del(todo) {
+		this.data = this.data.filter(function (t) {
+			return t !== todo;
+		});
+		this.inform();
+	}
+
+	toggleOne(todo) {
+		this.put(todo, {completed: !todo.completed});
+	}
+
+	toggleAll(bool) {
+		this.data = this.data.map(function (t) {
+			return assign(t, {completed: bool});
+		});
+		this.inform();
+	}
+
+	clearCompleted() {
+		this.data = this.data.filter(function (t) {
+			return !t.completed;
+		});
+		this.inform();
+	}
 }

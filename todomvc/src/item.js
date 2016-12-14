@@ -1,58 +1,58 @@
 import Inferno from 'inferno';
-import Component from 'inferno-component';
-import { ESCAPE, ENTER, isEqual } from './share';
+import { ESCAPE, ENTER } from './share';
 
-export default class Item extends Component {
-	constructor({data, ...props}) {
-		super(props);
-		this.todo = data;
-		this.state = {text: data.title};
-		this.editor = null;
+const linkEvent = Inferno.linkEvent;
+
+function handleSubmit(e) {
+	const todo = this.data;
+	const val = e.target.value.trim();
+	val ? this.doSave(todo, val) : this.doRemove(todo);
+}
+
+function handleKeydown(props, e) {
+	if (e.which === ENTER) return e.target.blur();
+	if (e.which === ESCAPE) {
+		e.target.value = props.data.title;
+		return e.target.blur(); // saves
 	}
+}
 
-	componentWillReceiveProps = ({data}) => this.setText(data.title);
-	shouldComponentUpdate = ({data}, {text}) => !(isEqual(data, this.todo) && text === this.state.text);
-	componentWillUpdate = ({data}) => (this.todo = data);
-	componentDidUpdate = () => this.editor.focus();
+function setFocusRef(el) {
+	if (this.editing && el) {
+		el.value = this.data.title;
+		el.focus();
+	}
+}
 
-	setText = text => this.setState({text});
+export function itemSCU(prev, next) {
+	return next.editing || next.data !== prev.data;
+}
 
-	render({doToggle, doDelete, doSave, onBlur, onFocus}, {text}) {
-		const {title, completed, editing} = this.todo;
+export function Item(props) {
+	const todo = props.data;
 
-		const cls = [];
-		editing && cls.push('editing');
-		completed && cls.push('completed');
+	const cls = [];
+	props.editing && cls.push('editing');
+	todo.completed && cls.push('completed');
 
-		const handleKeydown = e => {
-			if (e.which === ESCAPE) return onBlur();
-			if (e.which === ENTER) return doSave(text);
-		};
-
-		// tmp fix
-		const handleBlur = () => doSave(text);
-		const handleInput = e => this.setText(e.target.value);
-
-		return (
-			<li className={ cls.join(' ') }>
-				<div className="view">
-					<input className="toggle" type="checkbox"
-						checked={ completed } onClick={ doToggle }
-					/>
-
-					<label ondblclick={ onFocus }>{ title }</label>
-
-					<button className="destroy" onClick={ doDelete }></button>
-				</div>
-
-				<input className="edit"
-					ref={el => { this.editor = el }}
-					value={ editing && text }
-					onblur={ handleBlur }
-					oninput={ handleInput }
-					onkeydown={ handleKeydown }
+	return (
+		<li className={ cls.join(' ') }>
+			<div className="view">
+				<input className="toggle" type="checkbox"
+					checked={ todo.completed } onClick={ linkEvent(todo, props.doToggle) }
 				/>
-			</li>
-		);
-	}
+
+				<label onDblClick={ linkEvent(todo, props.doFocus) }>{ todo.title }</label>
+
+				<button className="destroy" onClick={ linkEvent(todo, props.doRemove) }></button>
+			</div>
+
+			<input
+				className="edit"
+				ref={ setFocusRef.bind(props) }
+				onblur={ handleSubmit.bind(props) }
+				onKeyDown={ linkEvent(props, handleKeydown) }
+			/>
+		</li>
+	);
 }

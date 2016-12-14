@@ -1,107 +1,107 @@
 import Inferno from 'inferno';
 import Component from 'inferno-component';
 import { ENTER, filters, read } from './share';
+import { Item, itemSCU } from './item';
 import { Head, Foot } from './base';
 import Model from './model';
-import Item from './item';
 
-const { render } = Inferno;
 const model = new Model();
 
-class App extends Component {
-	state = {
-		route: read(),
-		todos: model.get()
-	};
+function toggleOne(todo) {
+	model.toggleOne(todo);
+}
 
-	update = arr => this.setState({todos: arr});
+function toggleAll(e) {
+	model.toggleAll(e.target.checked);
+}
 
-	componentWillMount = () => {
-		window.onhashchange = () => this.setState({route: read()});
-	};
+function clearCompleted() {
+	model.clearCompleted();
+}
 
-	add = e => {
-		if (e.which !== ENTER) return;
-
-		const val = e.target.value.trim();
-		if (!val) return;
-
+function addTodo(e) {
+	if (e.which !== ENTER) return;
+	const val = e.target.value.trim();
+	if (val) {
+		model.add(val);
 		e.target.value = '';
-		this.update(
-			model.add(val)
-		);
-	};
+	}
+}
 
-	edit = (todo, val) => {
-		val = val.trim();
-		if (val.length) {
-			this.update(
-				model.put(todo, {title: val, editing: 0})
-			);
-		} else {
-			this.remove(todo);
-		}
-	};
+function removeTodo(todo) {
+	model.del(todo);
+}
 
-	focus = todo => this.update(
-		model.put(todo, {editing: 1})
-	);
+class App extends Component {
+	constructor(args) {
+		super(args);
+		// re-render on `inform()`
+		model.sub(this.setState.bind(this, {}));
+		this.focus = this.focus.bind(this);
+		this.save = this.save.bind(this);
+	}
 
-	blur = todo => this.update(
-		model.put(todo, {editing: 0})
-	);
+	setRoute() {
+		this.setState({
+			route: String(location.hash || '').split('/').pop() || 'all'
+		});
+	}
 
-	remove = todo => this.update(
-		model.del(todo)
-	);
+	componentWillMount() {
+		// handle hash-route changes
+		addEventListener('hashchange', this.setRoute.bind(this));
+		// find curr route
+		this.setRoute();
+	}
 
-	toggleOne = todo => this.update(
-		model.toggle(todo)
-	);
+	save(todo, val) {
+		this.setState({editing: 0});
+		model.save(todo, val);
+	}
 
-	toggleAll = ev => this.update(
-		model.toggleAll(ev.target.checked)
-	);
+	focus(todo) {
+		this.setState({editing: todo.id});
+	}
 
-	clearCompleted = () => this.update(
-		model.clearCompleted()
-	);
+	render(_, state) {
+		const todos = model.data;
 
-	render(_, {todos, route}) {
+		const self = this;
 		const num = todos.length;
-		const shown = todos.filter(filters[route]);
+		const shown = todos.filter(filters[state.route]);
 		const numDone = todos.filter(filters.completed).length;
 		const numAct = num - numDone;
 
 		return (
 			<div>
-				<Head onEnter={ this.add } />
+				<Head onEnter={ addTodo } />
 
 				{ num ? (
 					<section className="main">
 						<input className="toggle-all" type="checkbox"
-							onClick={ this.toggleAll } checked={ numAct === 0 }
+							onClick={ toggleAll } checked={ numAct === 0 }
 						/>
 
 						<ul className="todo-list">
 							{
-								shown.map(t =>
-									<Item data={t}
-										onBlur={ () => this.blur(t) }
-										onFocus={ () => this.focus(t) }
-										doDelete={ () => this.remove(t) }
-										doSave={ val => this.edit(t, val) }
-										doToggle={ () => this.toggleOne(t) }
-									/>
-								)
+								shown.map(function (t) {
+									return (
+										<Item data={t}
+											doSave={ self.save } doFocus={ self.focus }
+											doRemove={ removeTodo } doToggle={ toggleOne }
+											onComponentShouldUpdate={ itemSCU }
+											editing={ t.id === state.editing }
+										/>
+									);
+								})
 							}
 						</ul>
 					</section>
 				) : null }
 
 				{ (numAct || numDone) ? (
-					<Foot onClear={ this.clearCompleted }
-						left={numAct} done={numDone} route={route}
+					<Foot onClear={ clearCompleted }
+						left={numAct} done={numDone} route={state.route}
 					/>
 				) : null }
 			</div>
@@ -109,4 +109,4 @@ class App extends Component {
 	}
 }
 
-render(<App />, document.getElementById('app'));
+Inferno.render(<App />, document.getElementById('app'));
