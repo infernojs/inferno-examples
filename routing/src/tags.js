@@ -1,5 +1,5 @@
 import Inferno from 'inferno';
-import {Link} from 'inferno-router';
+import { Link } from 'inferno-router';
 
 export const App = ({children}) => (
 	<div className="layer">
@@ -11,7 +11,7 @@ export const App = ({children}) => (
 			<Link to="/users/may">May</Link>
 			<Link to="/foobar">404</Link>
 		</nav>
-		<div>{children}</div>
+		<div>{ children }</div>
 	</div>
 );
 

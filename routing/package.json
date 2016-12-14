@@ -6,8 +6,8 @@
   },
   "dependencies": {
     "history": "^4.4.1",
-    "inferno": "beta26",
-    "inferno-router": "beta26"
+    "inferno": "beta33",
+    "inferno-router": "beta33"
   },
   "devDependencies": {
     "babel-core": "^6.18.2",
