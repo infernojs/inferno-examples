@@ -1,0 +1,21 @@
+{
+	"name": "inferno_hello",
+	"version": "1.0.0",
+	"description": "Minimal Inferno 'Hello world' application",
+	"main": "index.js",
+	"dependencies": {
+		"inferno": "^5.0.4",
+		"babel-loader": "^7.1.4",
+		"babel-plugin-inferno": "^5.0.1",
+		"webpack": "^4.6.0"
+	},
+	"devDependencies": {
+		"webpack-cli": "^2.1.2"
+	},
+	"scripts": {
+		"build": "webpack",
+		"start": "node server.js"
+	},
+	"author": "Corentin Risselin",
+	"license": "MIT"
+}
