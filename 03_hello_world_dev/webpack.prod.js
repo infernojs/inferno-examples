@@ -1,4 +1,5 @@
 const webpack = require('webpack');
+const CompressionPlugin = require("compression-webpack-plugin")
 const config = require('./webpack.base.js');
 
 module.exports = Object.assign(
